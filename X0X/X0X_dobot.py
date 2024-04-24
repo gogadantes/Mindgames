@@ -202,69 +202,72 @@ def win_print(player_symbol):
     elif (player_symbol == 0):
         print("Player 2 Win")
 
+def draw_win(aligment, start, end): #horizontal - 1, vertical - 2, skos - 3
+    if (aligment == 1): #horizontal
+
+        dType.SetPTPCmdEx(api, 0, map[start][4][0] + block_x / 2,  map[start][4][1],  start_z, 0, 1)
+
+        current_pose = dType.GetPose(api)
+        dType.SetPTPCmdEx(api, 2, map[end][4][0] + block_x / 2,  map[end][4][1] + block_y,  start_z, current_pose[3], 1) 
+    elif (aligment == 2): #vertical
+
+        dType.SetPTPCmdEx(api, 0, map[start][4][0],  map[start][4][1] + block_y / 2,  start_z, 0, 1)
+
+        current_pose = dType.GetPose(api)
+        dType.SetPTPCmdEx(api, 2, map[end][4][0] + block_x,  map[end][4][1] + block_y / 2,  start_z, current_pose[3], 1)
+    elif (aligment == 3): #skos
+
+        dType.SetPTPCmdEx(api, 0, map[start][4][0],  map[start][4][1],  start_z, 0, 1)
+
+        current_pose = dType.GetPose(api)
+        dType.SetPTPCmdEx(api, 2, map[end][4][0] + block_x,  map[end][4][1] + block_y,  start_z, current_pose[3], 1)
+
+
 def win_check():
     global map, who_win
 
     #horizontal win for player 1
-    if (map[0][0] == 1 and map[1][3] == 1 and map[2][3] == 1):
+    if (map[0][0] == 1 and map[1][3] == 1 and map[2][3] == 1): #start - 0, end - 2
         who_win = 1
 
-        dType.SetPTPCmdEx(api, 0, map[0][4][0] + block_x / 2,  map[0][4][1],  start_z, 0, 1)
-
-        current_pose = dType.GetPose(api)
-        dType.SetPTPCmdEx(api, 2, map[2][4][0] + block_x / 2,  map[2][4][1] + block_y,  start_z, current_pose[3], 1)
+        draw_win(1,0,2)
 
         return 322
-    if (map[3][3] == 1 and map[4][3] == 1 and map[5][3] == 1):
+    if (map[3][3] == 1 and map[4][3] == 1 and map[5][3] == 1): #start - 3, end - 5
         who_win = 1
 
-        dType.SetPTPCmdEx(api, 0, map[3][4][0] + block_x / 2,  map[3][4][1],  start_z, 0, 1)
-
-        current_pose = dType.GetPose(api)
-        dType.SetPTPCmdEx(api, 2, map[5][4][0] + block_x / 2,  map[5][4][1] + block_y,  start_z, current_pose[3], 1)
+        draw_win(1,3,5)
 
         return 322
-    if (map[6][3] == 1 and map[7][3] == 1 and map[8][3] == 1):
+    if (map[6][3] == 1 and map[7][3] == 1 and map[8][3] == 1): #start - 6, end - 8
         who_win = 1
 
-        dType.SetPTPCmdEx(api, 0, map[6][4][0] + block_x / 2,  map[6][4][1],  start_z, 0, 1)
-
-        current_pose = dType.GetPose(api)
-        dType.SetPTPCmdEx(api, 2, map[8][4][0] + block_x / 2,  map[8][4][1] + block_y,  start_z, current_pose[3], 1)
+        draw_win(1,6,8)
 
         return 322
     
     #vertical win for player 1
-    if (map[0][3] == 1 and map[3][3] == 1 and map[6][3] == 1):
+    if (map[0][3] == 1 and map[3][3] == 1 and map[6][3] == 1): #start - 0, end - 6
         who_win = 1
 
-        dType.SetPTPCmdEx(api, 0, map[0][4][0],  map[0][4][1] + block_y / 2,  start_z, 0, 1)
-
-        current_pose = dType.GetPose(api)
-        dType.SetPTPCmdEx(api, 2, map[6][4][0] + block_x,  map[6][4][1] + block_y / 2,  start_z, current_pose[3], 1)
+        draw_win(2,0,6)
 
         return 322
-    if (map[1][3] == 1 and map[4][3] == 1 and map[7][3] == 1):
+    if (map[1][3] == 1 and map[4][3] == 1 and map[7][3] == 1): #start - 1, end - 7
         who_win = 1
 
-        dType.SetPTPCmdEx(api, 0, map[1][4][0],  map[1][4][1] + block_y / 2,  start_z, 0, 1)
-
-        current_pose = dType.GetPose(api)
-        dType.SetPTPCmdEx(api, 2, map[7][4][0] + block_x,  map[7][4][1] + block_y / 2,  start_z, current_pose[3], 1)
+        draw_win(2,1,7)
 
         return 322
-    if (map[2][3] == 1 and map[5][3] == 1 and map[8][3] == 1):
+    if (map[2][3] == 1 and map[5][3] == 1 and map[8][3] == 1): #start - 2, end - 8
         who_win = 1
 
-        dType.SetPTPCmdEx(api, 0, map[2][4][0],  map[2][4][1] + block_y / 2,  start_z, 0, 1)
-
-        current_pose = dType.GetPose(api)
-        dType.SetPTPCmdEx(api, 2, map[8][4][0] + block_x,  map[8][4][1] + block_y / 2,  start_z, current_pose[3], 1)
+        draw_win(2,2,8)
 
         return 322
     
     #skos win for player 1
-    if (map[0][3] == 1 and map[4][3] == 1 and map[8][3] == 1):
+    if (map[0][3] == 1 and map[4][3] == 1 and map[8][3] == 1): #start - 0, end - 8
         who_win = 1
 
         dType.SetPTPCmdEx(api, 0, map[0][4][0],  map[0][4][1],  start_z, 0, 1)
@@ -273,7 +276,7 @@ def win_check():
         dType.SetPTPCmdEx(api, 2, map[8][4][0] + block_x,  map[8][4][1] + block_y,  start_z, current_pose[3], 1)
 
         return 322
-    if (map[2][3] == 1 and map[4][3] == 1 and map[6][3] == 1):
+    if (map[2][3] == 1 and map[4][3] == 1 and map[6][3] == 1): #start - 2, end - 6
         who_win = 1
 
         dType.SetPTPCmdEx(api, 0, map[2][4][0],  map[2][4][1] + block_y,  start_z, 0, 1)
@@ -283,67 +286,48 @@ def win_check():
 
         return 322
     
-
     #horizontal win for player 2
-    if (map[0][3] == 0 and map[1][3] == 0 and map[2][3] == 0):
+    if (map[0][3] == 0 and map[1][3] == 0 and map[2][3] == 0): #start - 0, end - 2
         who_win = 0
 
-        dType.SetPTPCmdEx(api, 0, map[0][4][0] + block_x / 2,  map[0][4][1],  start_z, 0, 1)
-
-        current_pose = dType.GetPose(api)
-        dType.SetPTPCmdEx(api, 2, map[2][4][0] + block_x / 2,  map[2][4][1] + block_y,  start_z, current_pose[3], 1)
+        draw_win(1,0,2)
 
         return 322
-    if (map[3][3] == 0 and map[4][3] == 0 and map[5][3] == 0):
+    if (map[3][3] == 0 and map[4][3] == 0 and map[5][3] == 0): #start - 3, end - 5
         who_win = 0
 
-        dType.SetPTPCmdEx(api, 0, map[3][4][0] + block_x / 2,  map[3][4][1],  start_z, 0, 1)
-
-        current_pose = dType.GetPose(api)
-        dType.SetPTPCmdEx(api, 2, map[5][4][0] + block_x / 2,  map[5][4][1] + block_y,  start_z, current_pose[3], 1)
+        draw_win(1,3,5)
 
         return 322
-    if (map[6][3] == 0 and map[7][3] == 0 and map[8][3] == 0):
+    if (map[6][3] == 0 and map[7][3] == 0 and map[8][3] == 0): #start - 6, end - 8
         who_win = 0
 
-        dType.SetPTPCmdEx(api, 0, map[6][4][0] + block_x / 2,  map[6][4][1],  start_z, 0, 1)
-
-        current_pose = dType.GetPose(api)
-        dType.SetPTPCmdEx(api, 2, map[8][4][0] + block_x / 2,  map[8][4][1] + block_y,  start_z, current_pose[3], 1)
+        draw_win(1,6,8)
 
         return 322
     
     #vertical win for player 2
-    if (map[0][3] == 0 and map[3][3] == 0 and map[6][3] == 0):
+    if (map[0][3] == 0 and map[3][3] == 0 and map[6][3] == 0): #start - 0, end - 6
         who_win = 0
 
-        dType.SetPTPCmdEx(api, 0, map[0][4][0],  map[0][4][1] + block_y / 2,  start_z, 0, 1)
-
-        current_pose = dType.GetPose(api)
-        dType.SetPTPCmdEx(api, 2, map[6][4][0] + block_x,  map[6][4][1] + block_y / 2,  start_z, current_pose[3], 1)
+        draw_win(2,0,6)
 
         return 322
-    if (map[1][3] == 0 and map[4][3] == 0 and map[7][3] == 0):
+    if (map[1][3] == 0 and map[4][3] == 0 and map[7][3] == 0): #start - 1, end - 7
         who_win = 0
 
-        dType.SetPTPCmdEx(api, 0, map[1][4][0],  map[1][4][1] + block_y / 2,  start_z, 0, 1)
-
-        current_pose = dType.GetPose(api)
-        dType.SetPTPCmdEx(api, 2, map[7][4][0] + block_x,  map[7][4][1] + block_y / 2,  start_z, current_pose[3], 1)
+        draw_win(2,1,7)
 
         return 322
-    if (map[2][3] == 0 and map[5][3] == 0 and map[8][3] == 0):
+    if (map[2][3] == 0 and map[5][3] == 0 and map[8][3] == 0): #start - 2, end - 8
         who_win = 0
 
-        dType.SetPTPCmdEx(api, 0, map[2][4][0],  map[2][4][1] + block_y / 2,  start_z, 0, 1)
-
-        current_pose = dType.GetPose(api)
-        dType.SetPTPCmdEx(api, 2, map[8][4][0] + block_x,  map[8][4][1] + block_y / 2,  start_z, current_pose[3], 1)
+        draw_win(2,2,8)
 
         return 322
     
     #skos win for player 2
-    if (map[0][3] == 0 and map[4][3] == 0 and map[8][3] == 0):
+    if (map[0][3] == 0 and map[4][3] == 0 and map[8][3] == 0): #start - 0, end - 8
         who_win = 0
 
         dType.SetPTPCmdEx(api, 0, map[0][4][0],  map[0][4][1],  start_z, 0, 1)
@@ -352,7 +336,7 @@ def win_check():
         dType.SetPTPCmdEx(api, 2, map[8][4][0] + block_x,  map[8][4][1] + block_y,  start_z, current_pose[3], 1)
 
         return 322
-    if (map[2][3] == 0 and map[4][3] == 0 and map[6][3] == 0):
+    if (map[2][3] == 0 and map[4][3] == 0 and map[6][3] == 0): #start - 2, end - 6
         who_win = 0
 
         dType.SetPTPCmdEx(api, 0, map[2][4][0],  map[2][4][1] + block_y,  start_z, 0, 1)
