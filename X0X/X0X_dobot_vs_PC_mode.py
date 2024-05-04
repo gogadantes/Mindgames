@@ -3,7 +3,7 @@ import DobotDllType as dType
 import random as rand
 import math
 
-CON_STR = {
+""" CON_STR = {
     dType.DobotConnect.DobotConnect_NoError:  "DobotConnect_NoError",
     dType.DobotConnect.DobotConnect_NotFound: "DobotConnect_NotFound",
     dType.DobotConnect.DobotConnect_Occupied: "DobotConnect_Occupied"}
@@ -21,7 +21,7 @@ print('Base Error: ', dType.GetBaseDecoderStaticError(api))
 
 #Magician
 dType.SetEndEffectorParamsEx(api, 59.7, 0, 0, 1)
-dType.SetPTPJumpParamsEx(api,50,100,1)
+dType.SetPTPJumpParamsEx(api,50,100,1) """
 
 who_win = 22
 mode = 0
@@ -47,9 +47,58 @@ block_y = 0
 # 1 - column position
 # 2 - input status
 # 3 - player symbol
-map = [[1,1,0,5], [1,2,0,5], [1,3,0,5],
-       [2,1,0,5], [2,2,0,5], [2,3,0,5],
-       [3,1,0,5], [3,2,0,5], [3,3,0,5]]
+#map = [[1,1,0,5], [1,2,0,5], [1,3,0,5],
+ #      [2,1,0,5], [2,2,0,5], [2,3,0,5],
+  #     [3,1,0,5], [3,2,0,5], [3,3,0,5]]
+
+map = []
+
+def win_arrays(blocks):
+    hor_wins = []
+    ver_wins = []
+    skos_wins = []
+
+    for i in range(blocks):
+        count = []
+        hor_wins.append(count)
+        for j in range(blocks):
+            timemap = []
+            timemap.append(i + 1)
+            timemap.append(j + 1)
+            hor_wins[i].append(timemap)
+
+    for i in range(blocks):
+        count = []
+        ver_wins.append(count)
+        for j in range(blocks):
+            timemap = []
+            timemap.append(j + 1)
+            timemap.append(i + 1)
+            ver_wins[i].append(timemap)
+
+    for i in range(1):
+        count = []
+        skos_wins.append(count)
+        for j in range(blocks):
+            timemap = []
+            timemap.append(j + 1)
+            timemap.append(j + 1)
+            skos_wins[i].append(timemap)
+
+    
+        count = []
+        skos_wins.append(count)
+        sks = 1
+        for j in reversed(range(blocks)):
+            timemap = []
+            timemap.append(j + 1)
+            timemap.append(sks)
+            skos_wins[i + 1].append(timemap)
+            sks += 1
+
+    print(hor_wins)
+    print(ver_wins)
+    print(skos_wins)
 
 def choose_mode():
     while (True):
@@ -63,17 +112,27 @@ def cort_coord():
 
     size_cort_x = int(input('Input width of cort for game(dots): '))
     size_cort_y = int(input('Input height of cort for game(dots): '))
-    block_x = size_cort_x / 3
-    block_y = size_cort_y / 3
+    blocks = int(input('Input number of blocks for game: '))
+    block_x = size_cort_x / blocks
+    block_y = size_cort_y / blocks
 
-    start_x = center_x - (block_x * 1.5)
-    start_y = center_y - (block_y * 1.5)
+    start_x = center_x - (block_x * (blocks / 2))
+    start_y = center_y - (block_y * (blocks / 2))
     
     coordx = start_x
     coordy = start_y
 
-    for i in range(3):
-        for i in range(3):
+    win_arrays(blocks)
+
+    for i in range(blocks):
+        for j in range(blocks):
+            timemap = []
+            timemap.append(i + 1)
+            timemap.append(j + 1)
+            timemap.append(0)
+            timemap.append(5)
+            map.append(timemap)
+
             arcord = []
             arcord.append(coordx)
             arcord.append(coordy)
@@ -83,6 +142,7 @@ def cort_coord():
         coordy = coordy + block_y
         coordx = start_x
 
+    print(count)
     print(map)
 
     #draw pole 
@@ -375,6 +435,8 @@ def game():
     cort_coord()
 
     while (True):
+        choose_mode()
+
         symbol_result = choose_symbol()
         player1_symbol = symbol_result[0]
         player2_symbol = symbol_result[1]
@@ -408,5 +470,5 @@ def game():
             elif(question == 'no'):
                 return
         
-if (state == dType.DobotConnect.DobotConnect_NoError):
-    game()
+#if (state == dType.DobotConnect.DobotConnect_NoError):
+game()
