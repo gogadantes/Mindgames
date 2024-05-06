@@ -53,10 +53,12 @@ block_y = 0
 
 map = []
 
+hor_wins = []
+ver_wins = []
+skos_wins = []
+
 def win_arrays(blocks):
-    hor_wins = []
-    ver_wins = []
-    skos_wins = []
+    global hor_wins, ver_wins, skos_wins
 
     for i in range(blocks):
         count = []
@@ -142,7 +144,6 @@ def cort_coord():
         coordy = coordy + block_y
         coordx = start_x
 
-    print(count)
     print(map)
 
     #draw pole 
@@ -302,6 +303,15 @@ def draw_win(aligment, start, end): #horizontal - 1, vertical - 2, skos - 3
 
 def win_check():
     global map, who_win
+    global hor_wins, ver_wins, skos_wins
+
+    for i in range(len(hor_wins)):
+        if (map[0][0] == 1 and map[1][3] == 1 and map[2][3] == 1): #start - 0, end - 2
+            who_win = 1
+
+            draw_win(1,0,2)
+
+            return 322
 
     #horizontal win for player 1
     if (map[0][0] == 1 and map[1][3] == 1 and map[2][3] == 1): #start - 0, end - 2
