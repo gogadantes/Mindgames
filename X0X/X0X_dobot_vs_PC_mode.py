@@ -43,6 +43,8 @@ start_z = -51
 block_x = 0
 block_y = 0
 
+blocks = 0
+
 # 0 - row position
 # 1 - column position
 # 2 - input status
@@ -59,6 +61,7 @@ skos_wins = []
 
 def win_arrays(blocks):
     global hor_wins, ver_wins, skos_wins
+    hor = ver = skos = 0
 
     for i in range(blocks):
         count = []
@@ -67,16 +70,21 @@ def win_arrays(blocks):
             timemap = []
             timemap.append(i + 1)
             timemap.append(j + 1)
+            timemap.append(hor)
             hor_wins[i].append(timemap)
+            hor += 1
 
     for i in range(blocks):
+        ver = i
         count = []
         ver_wins.append(count)
         for j in range(blocks):
             timemap = []
             timemap.append(j + 1)
             timemap.append(i + 1)
+            timemap.append(ver)
             ver_wins[i].append(timemap)
+            ver += blocks
 
     for i in range(1):
         count = []
@@ -85,9 +93,12 @@ def win_arrays(blocks):
             timemap = []
             timemap.append(j + 1)
             timemap.append(j + 1)
+            timemap.append(skos)
             skos_wins[i].append(timemap)
+            skos += blocks + 1
 
     
+        skos = blocks - 1
         count = []
         skos_wins.append(count)
         sks = 1
@@ -95,8 +106,9 @@ def win_arrays(blocks):
             timemap = []
             timemap.append(j + 1)
             timemap.append(sks)
+            timemap.append(skos)
             skos_wins[i + 1].append(timemap)
-            sks += 1
+            skos += blocks - 1
 
     print(hor_wins)
     print(ver_wins)
@@ -109,7 +121,7 @@ def choose_mode():
             print('Choose right game mode!')
 
 def cort_coord():
-    global size_cort_x, size_cort_y, center_x, center_y, start_z, block_x, block_y, map
+    global blocks, size_cort_x, size_cort_y, center_x, center_y, start_z, block_x, block_y, map
     count = 0
 
     size_cort_x = int(input('Input width of cort for game(dots): '))
@@ -303,55 +315,53 @@ def draw_win(aligment, start, end): #horizontal - 1, vertical - 2, skos - 3
 
 def win_check():
     global map, who_win
-    global hor_wins, ver_wins, skos_wins
+    global hor_wins, ver_wins, skos_wins, blocks
 
+    #horizontal check for player1 and player2
     for i in range(len(hor_wins)):
-        if (map[0][0] == 1 and map[1][3] == 1 and map[2][3] == 1): #start - 0, end - 2
+        start = end = check1 = check2 = 0
+
+        for j in range(len(hor_wins[i])):
+            if (map[hor_wins[i][j][2]][3] == 1):
+                check1 += 1
+            if (map[hor_wins[i][j][2]][3] == 0):
+                check2 += 1
+            if (j == 0):
+                start = hor_wins[i][j][2]
+            end = hor_wins[i][j][2]
+        
+        if (check1 == blocks):
             who_win = 1
-
-            draw_win(1,0,2)
-
+            draw_win(1,start,end)
             return 322
+        
+        if (check1 == blocks):
+            who_win = 0
+            draw_win(1,start,end)
+            return 322
+        
+    #vertical check for player1 and player2
+    for i in range(len(ver_wins)):
+        start = end = check1 = check2 = 0
 
-    #horizontal win for player 1
-    if (map[0][0] == 1 and map[1][3] == 1 and map[2][3] == 1): #start - 0, end - 2
-        who_win = 1
-
-        draw_win(1,0,2)
-
-        return 322
-    if (map[3][3] == 1 and map[4][3] == 1 and map[5][3] == 1): #start - 3, end - 5
-        who_win = 1
-
-        draw_win(1,3,5)
-
-        return 322
-    if (map[6][3] == 1 and map[7][3] == 1 and map[8][3] == 1): #start - 6, end - 8
-        who_win = 1
-
-        draw_win(1,6,8)
-
-        return 322
-    
-    #vertical win for player 1
-    if (map[0][3] == 1 and map[3][3] == 1 and map[6][3] == 1): #start - 0, end - 6
-        who_win = 1
-
-        draw_win(2,0,6)
-
-        return 322
-    if (map[1][3] == 1 and map[4][3] == 1 and map[7][3] == 1): #start - 1, end - 7
-        who_win = 1
-
-        draw_win(2,1,7)
-
-        return 322
-    if (map[2][3] == 1 and map[5][3] == 1 and map[8][3] == 1): #start - 2, end - 8
-        who_win = 1
-
-        draw_win(2,2,8)
-
-        return 322
+        for j in range(len(ver_wins[i])):
+            if (map[ver_wins[i][j][2]][3] == 1):
+                check1 += 1
+            if (map[ver_wins[i][j][2]][3] == 0):
+                check2 += 1
+            if (j == 0):
+                start = ver_wins[i][j][2]
+            end = ver_wins[i][j][2]
+        
+        if (check1 == blocks):
+            who_win = 1
+            draw_win(1,start,end)
+            return 322
+        
+        if (check1 == blocks):
+            who_win = 0
+            draw_win(1,start,end)
+            return 322
     
     #skos win for player 1
     if (map[0][3] == 1 and map[4][3] == 1 and map[8][3] == 1): #start - 0, end - 8
@@ -370,46 +380,6 @@ def win_check():
 
         current_pose = dType.GetPose(api)
         dType.SetPTPCmdEx(api, 2, map[6][4][0] + block_x,  map[6][4][1],  start_z, current_pose[3], 1)
-
-        return 322
-    
-    #horizontal win for player 2
-    if (map[0][3] == 0 and map[1][3] == 0 and map[2][3] == 0): #start - 0, end - 2
-        who_win = 0
-
-        draw_win(1,0,2)
-
-        return 322
-    if (map[3][3] == 0 and map[4][3] == 0 and map[5][3] == 0): #start - 3, end - 5
-        who_win = 0
-
-        draw_win(1,3,5)
-
-        return 322
-    if (map[6][3] == 0 and map[7][3] == 0 and map[8][3] == 0): #start - 6, end - 8
-        who_win = 0
-
-        draw_win(1,6,8)
-
-        return 322
-    
-    #vertical win for player 2
-    if (map[0][3] == 0 and map[3][3] == 0 and map[6][3] == 0): #start - 0, end - 6
-        who_win = 0
-
-        draw_win(2,0,6)
-
-        return 322
-    if (map[1][3] == 0 and map[4][3] == 0 and map[7][3] == 0): #start - 1, end - 7
-        who_win = 0
-
-        draw_win(2,1,7)
-
-        return 322
-    if (map[2][3] == 0 and map[5][3] == 0 and map[8][3] == 0): #start - 2, end - 8
-        who_win = 0
-
-        draw_win(2,2,8)
 
         return 322
     
