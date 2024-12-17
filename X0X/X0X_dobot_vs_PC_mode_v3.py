@@ -264,8 +264,8 @@ def turn(player_symbol):
                 column = int(input('Input column: ')) 
             elif (player_symbol == 0):
                 print("Computer. Turn number: ", player1_turn)
-                row = rand.randint(1,9)
-                column = rand.randint(1,9)
+                row = rand.randint(1,blocks)
+                column = rand.randint(1,blocks)
         
 
         for i in range(len(map)):
