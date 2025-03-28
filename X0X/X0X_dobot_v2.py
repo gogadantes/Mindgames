@@ -2,6 +2,8 @@ import threading
 import DobotDllType as dType
 import random as rand
 import math
+import sys
+sys.path.insert(1,'./DLL')
 
 CON_STR = {
     dType.DobotConnect.DobotConnect_NoError:  "DobotConnect_NoError",

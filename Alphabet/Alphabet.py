@@ -21,28 +21,28 @@ def dobot_connect():
 
     #Magician
     dType.SetEndEffectorParamsEx(api, 59.7, 0, 0, 1)
-    dType.SetPTPJumpParamsEx(api,50,100,1)
+    dType.SetPTPJumpParamsEx(api, 50, 100, 1)
 
     return api
 
 api = dobot_connect()
 
+print("Good")
 #English
 
 def us_symbol_A(start_x, start_y, start_z, x, y):
-    print(x, y)
     dType.SetPTPCmdEx(api, 0, start_x,  start_y,  start_z, 0, 1)
 
     current_pose = dType.GetPose(api)
-    dType.SetPTPCmdEx(api, 2, start_x + (x / 2),  start_y + y,  start_z, current_pose[3], 1)
+    dType.SetPTPCmdEx(api, 2, start_x + x,  start_y ,  start_z, current_pose[3], 1)
 
-    current_pose = dType.GetPose(api)
-    dType.SetPTPCmdEx(api, 2, start_x + x,  start_y,  start_z, current_pose[3], 1)
+    # current_pose = dType.GetPose(api)
+    # dType.SetPTPCmdEx(api, 2, start_x + x,  start_y,  start_z, current_pose[3], 1)
 
-    dType.SetPTPCmdEx(api, 0, start_x + (x * 0.75),  start_y + (y / 2),  start_z, 0, 1)
+    # dType.SetPTPCmdEx(api, 0, start_x + (x * 0.75),  start_y + (y / 2),  start_z, 0, 1)
 
-    current_pose = dType.GetPose(api)
-    dType.SetPTPCmdEx(api, 2, start_x + (x * 0.25),  start_y + (y / 2),  start_z, current_pose[3], 1)
+    # current_pose = dType.GetPose(api)
+    # dType.SetPTPCmdEx(api, 2, start_x + (x * 0.25),  start_y + (y / 2),  start_z, current_pose[3], 1)
 
 def us_symbol_E(start_x, start_y, start_z, x, y):
     dType.SetPTPCmdEx(api, 0, start_x,  start_y,  start_z, 0, 1)
@@ -1037,4 +1037,8 @@ numbers = {
 
 }
 
-en["A"](25,25,55,20,20)
+dType.SetHOMECmdEx(api,1,0)
+current_pose = dType.GetPose(api)
+en["A"](current_pose[0], current_pose[1], -66.8, 25, 25)
+
+dType.DisconnectDobot(api)
