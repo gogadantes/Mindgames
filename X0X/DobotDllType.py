@@ -457,10 +457,12 @@ DobotCommunicate = enum(
 
 def load():
     if platform.system() == "Windows":
-        return CDLL("C:\\Users\\Pupil\\Desktop\\mindgames\\DobotDemoForPython\\DobotDll.dll",  RTLD_GLOBAL) 
+        print("your dll is 32 bit, in order to run the program successfully, please make sure that your python is 32 bit too")
+        print("python environment is：",platform.architecture())
+        return CDLL("./DobotDll.dll",  RTLD_GLOBAL) 
     elif platform.system() == "Darwin" :
-        return CDLL("libDobotDll.dylib",  RTLD_GLOBAL)
-    else:
+        return CDLL("./libDobotDll.dylib",  RTLD_GLOBAL)
+    elif platform.system() == "Linux": 
         return cdll.loadLibrary("libDobotDll.so")
     
 def dSleep(ms):
