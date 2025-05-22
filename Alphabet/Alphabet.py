@@ -3,6 +3,9 @@ import DobotDllType as dType
 import random as rand
 import math
 
+def get_rotation():
+    return dType.GetPose(api)[3]
+
 def dobot_connect():
     CON_STR = {
         dType.DobotConnect.DobotConnect_NoError:  "DobotConnect_NoError",
@@ -44,6 +47,52 @@ def us_symbol_A(start_x, start_y, start_z, x, y):
     current_pose = dType.GetPose(api)
     dType.SetPTPCmdEx(api, 2, start_x + (x * 0.25),  start_y + (y / 2),  start_z, current_pose[3], 1)
 
+def us_symbol_B(x, y, z, width, height, segments=15):
+    r = get_rotation()
+    h_half = height / 2
+
+    # Вертикальная линия
+    dType.SetPTPCmdEx(api, 0, x, y, z, r, 1)
+    dType.SetPTPCmdEx(api, 2, x, y + height, z, r, 1)
+
+    # Верхняя дуга
+    for i in range(segments + 1):
+        angle = math.pi * i / segments
+        xi = x + width * math.cos(angle)
+        yi = y + h_half + width * math.sin(angle)
+        dType.SetPTPCmdEx(api, 2, xi, yi, z, r, 1)
+
+    # Нижняя дуга
+    for i in range(segments + 1):
+        angle = math.pi * i / segments
+        xi = x + width * math.cos(angle)
+        yi = y + width * math.sin(angle)
+        dType.SetPTPCmdEx(api, 2, xi, yi, z, r, 1)
+
+def us_symbol_C(x, y, z, radius, segments=30):
+    r = get_rotation()
+    for i in range(segments + 1):
+        angle = math.pi + (math.pi * i / segments)
+        xi = x + radius * math.cos(angle)
+        yi = y + radius * math.sin(angle)
+        if i == 0:
+            dType.SetPTPCmdEx(api, 0, xi, yi, z, r, 1)
+        else:
+            dType.SetPTPCmdEx(api, 2, xi, yi, z, r, 1)
+
+def us_symbol_D(x, y, z, radius, height, segments=30):
+    r = get_rotation()
+    dType.SetPTPCmdEx(api, 0, x, y, z, r, 1)
+    dType.SetPTPCmdEx(api, 2, x, y + height, z, r, 1)
+
+    for i in range(segments + 1):
+        angle = math.pi * i / segments
+        xi = x + radius * math.cos(angle)
+        yi = y + height / 2 + radius * math.sin(angle)
+        dType.SetPTPCmdEx(api, 2, xi, yi, z, r, 1)
+
+    dType.SetPTPCmdEx(api, 2, x, y, z, r, 1)
+
 def us_symbol_E(start_x, start_y, start_z, x, y):
     dType.SetPTPCmdEx(api, 0, start_x,  start_y,  start_z, 0, 1)
 
@@ -77,6 +126,19 @@ def us_symbol_F(start_x, start_y, start_z, x, y):
     current_pose = dType.GetPose(api)
     dType.SetPTPCmdEx(api, 2, start_x + x,  start_y + (y / 2),  start_z, current_pose[3], 1)
 
+def us_symbol_G(x, y, z, radius, segments=30):
+    r = get_rotation()
+    for i in range(int(segments * 0.75) + 1):
+        angle = math.pi + (1.5 * math.pi * i / segments)
+        xi = x + radius * math.cos(angle)
+        yi = y + radius * math.sin(angle)
+        if i == 0:
+            dType.SetPTPCmdEx(api, 0, xi, yi, z, r, 1)
+        else:
+            dType.SetPTPCmdEx(api, 2, xi, yi, z, r, 1)
+    # "Зубчик"
+    dType.SetPTPCmdEx(api, 2, x + radius / 2, y, z, r, 1)
+
 def us_symbol_H(start_x, start_y, start_z, x, y):
     dType.SetPTPCmdEx(api, 0, start_x,  start_y,  start_z, 0, 1)
 
@@ -108,6 +170,18 @@ def us_symbol_I(start_x, start_y, start_z, x, y):
 
     current_pose = dType.GetPose(api)
     dType.SetPTPCmdEx(api, 2, start_x + (x / 2),  start_y + y,  start_z, current_pose[3], 1)
+
+def us_symbol_J(x, y, z, height, radius, segments=15):
+    r = get_rotation()
+    for i in range(segments + 1):
+        angle = math.pi / 2 + math.pi * i / segments
+        xi = x + radius * math.cos(angle)
+        yi = y + radius * math.sin(angle)
+        if i == 0:
+            dType.SetPTPCmdEx(api, 0, xi, yi, z, r, 1)
+        else:
+            dType.SetPTPCmdEx(api, 2, xi, yi, z, r, 1)
+    dType.SetPTPCmdEx(api, 2, x + radius, y + height, z, r, 1)
 
 def us_symbol_K(start_x, start_y, start_z, x, y):
     dType.SetPTPCmdEx(api, 0, start_x,  start_y,  start_z, 0, 1)
@@ -163,6 +237,71 @@ def us_symbol_N(start_x, start_y, start_z, x, y):
     current_pose = dType.GetPose(api)
     dType.SetPTPCmdEx(api, 2, start_x + x,  start_y + y,  start_z, current_pose[3], 1)
 
+def us_symbol_O(x, y, z, radius, segments=36):
+    r = get_rotation()
+    for i in range(segments + 1):
+        angle = 2 * math.pi * i / segments
+        xi = x + radius * math.cos(angle)
+        yi = y + radius * math.sin(angle)
+        if i == 0:
+            dType.SetPTPCmdEx(api, 0, xi, yi, z, r, 1)
+        else:
+            dType.SetPTPCmdEx(api, 2, xi, yi, z, r, 1)
+
+def us_symbol_P(x, y, z, height, radius, segments=15):
+    r = get_rotation()
+    dType.SetPTPCmdEx(api, 0, x, y, z, r, 1)
+    dType.SetPTPCmdEx(api, 2, x, y + height, z, r, 1)
+    for i in range(segments + 1):
+        angle = math.pi * i / segments
+        xi = x + radius * math.cos(angle)
+        yi = y + height - radius + radius * math.sin(angle)
+        dType.SetPTPCmdEx(api, 2, xi, yi, z, r, 1)
+
+def us_symbol_Q(x, y, z, radius, segments=36):
+    r = get_rotation()
+    for i in range(segments + 1):
+        angle = 2 * math.pi * i / segments
+        xi = x + radius * math.cos(angle)
+        yi = y + radius * math.sin(angle)
+        if i == 0:
+            dType.SetPTPCmdEx(api, 0, xi, yi, z, r, 1)
+        else:
+            dType.SetPTPCmdEx(api, 2, xi, yi, z, r, 1)
+    # Хвост
+    dType.SetPTPCmdEx(api, 2, x + radius / 2, y + radius / 2, z, r, 1)
+
+def us_symbol_R(x, y, z, height, radius, segments=15):
+    r = get_rotation()
+    dType.SetPTPCmdEx(api, 0, x, y, z, r, 1)
+    dType.SetPTPCmdEx(api, 2, x, y + height, z, r, 1)
+    for i in range(segments + 1):
+        angle = math.pi * i / segments
+        xi = x + radius * math.cos(angle)
+        yi = y + height - radius + radius * math.sin(angle)
+        dType.SetPTPCmdEx(api, 2, xi, yi, z, r, 1)
+    dType.SetPTPCmdEx(api, 2, x + radius, y, z, r, 1)
+
+def us_symbol_S(x, y, z, radius, segments=20):
+    r = get_rotation()
+
+    # Верхняя дуга
+    for i in range(segments + 1):
+        angle = math.pi + (math.pi * i / segments)
+        xi = x + radius * math.cos(angle)
+        yi = y + 2 * radius + radius * math.sin(angle)
+        if i == 0:
+            dType.SetPTPCmdEx(api, 0, xi, yi, z, r, 1)
+        else:
+            dType.SetPTPCmdEx(api, 2, xi, yi, z, r, 1)
+
+    # Нижняя дуга
+    for i in range(segments + 1):
+        angle = 2 * math.pi * i / segments
+        xi = x + radius * math.cos(angle)
+        yi = y + radius * math.sin(angle)
+        dType.SetPTPCmdEx(api, 2, xi, yi, z, r, 1)
+
 def us_symbol_T(start_x, start_y, start_z, x, y):
     dType.SetPTPCmdEx(api, 0, start_x,  start_y + y,  start_z, 0, 1)
 
@@ -173,6 +312,19 @@ def us_symbol_T(start_x, start_y, start_z, x, y):
 
     current_pose = dType.GetPose(api)
     dType.SetPTPCmdEx(api, 2, start_x + (x / 2),  start_y,  start_z, current_pose[3], 1)
+
+def us_symbol_U(x, y, z, height, radius, segments=15):
+    r = get_rotation()
+    dType.SetPTPCmdEx(api, 0, x, y + height, z, r, 1)
+    dType.SetPTPCmdEx(api, 2, x, y + radius, z, r, 1)
+
+    for i in range(segments + 1):
+        angle = math.pi + math.pi * i / segments
+        xi = x + radius + radius * math.cos(angle)
+        yi = y + radius * math.sin(angle)
+        dType.SetPTPCmdEx(api, 2, xi, yi, z, r, 1)
+
+    dType.SetPTPCmdEx(api, 2, x + 2 * radius, y + height, z, r, 1)
 
 def us_symbol_V(start_x, start_y, start_z, x, y):
     dType.SetPTPCmdEx(api, 0, start_x,  start_y + y,  start_z, 0, 1)
@@ -295,6 +447,29 @@ def ru_symbol_G(start_x, start_y, start_z, x, y):
 
     current_pose = dType.GetPose(api)
     dType.SetPTPCmdEx(api, 2, start_x + x,  start_y + y,  start_z, current_pose[3], 1)
+
+def ur_symbol_D(x, y, z, width, height):
+    r = get_rotation()
+
+    base_height = height * 0.2  # основание у «Д»
+    top_x = x + width / 2
+    top_y = y + height
+
+    # 1. Поднимаемся к нижней точке левой вертикали
+    dType.SetPTPCmdEx(api, 0, x, y, z, r, 1)
+
+    # 2. Линия к вершине
+    dType.SetPTPCmdEx(api, 2, top_x, top_y, z, r, 1)
+
+    # 3. Линия к правой нижней части
+    dType.SetPTPCmdEx(api, 2, x + width, y, z, r, 1)
+
+    # 4. Горизонтальная линия основания
+    dType.SetPTPCmdEx(api, 2, x + width, y - base_height, z, r, 1)
+    dType.SetPTPCmdEx(api, 2, x, y - base_height, z, r, 1)
+
+    # 5. Замыкаем в исходную точку
+    dType.SetPTPCmdEx(api, 2, x, y, z, r, 1)
 
 def ru_symbol_D(start_x, start_y, start_z, x, y):
     dType.SetPTPCmdEx(api, 0, start_x,  start_y,  start_z, 0, 1)
@@ -960,62 +1135,62 @@ def number_0(start_x, start_y, start_z, x, y):
     current_pose = dType.GetPose(api)
     dType.SetPTPCmdEx(api, 2, start_x,  start_y,  start_z, current_pose[3], 1)
 
-ru = {"A":ru_symbol_A,  # type: ignore
-      "Б":ru_symbol_Be, # type: ignore
-      "В":ru_symbol_Ve, # type: ignore
-      "Г":ru_symbol_G,  # type: ignore
-      "Д":"",           # type: ignore
-      "Е":ru_symbol_E,  # type: ignore
-      "Ё":ru_symbol_Yo, # type: ignore
-      "Ж":ru_symbol_Ze, # type: ignore
-      "З":ru_symbol_Ze, # type: ignore
-      "И":ru_symbol_And,# type: ignore 
-      "Й":ru_symbol_Yo, # type: ignore
-      "К":ru_symbol_K,  # type: ignore
-      "Л":ru_symbol_L,  # type: ignore
-      "М":ru_symbol_M,  # type: ignore
-      "Н":ru_symbol_H,  # type: ignore
-      "О":ru_symbol_O,  # type: ignore
-      "П":ru_symbol_P,  # type: ignore
-      "Р":ru_symbol_R,  # type: ignore
-      "С":ru_symbol_C,  # type: ignore
-      "Т":ru_symbol_T,  # type: ignore
-      "У":ru_symbol_U,  # type: ignore
-      "Ф":ru_symbol_F,  # type: ignore
-      "Х":ru_symbol_X,  # type: ignore
-      "Ц":ru_symbol_Ce, # type: ignore
-      "Ч":ru_symbol_Che,# type: ignore
-      "Ш":ru_symbol_Sha,# type: ignore 
-      "Щ":ru_symbol_Shca,# type: ignore 
-      "Ъ":ru_symbol_Tverd,# type: ignore 
-      "Ы":ru_symbol_Yi, # type: ignore
-      "Ь":ru_symbol_Magki,# type: ignore 
-      "Э":ru_symbol_Eee,# type: ignore 
-      "Ю":ru_symbol_U,  # type: ignore
-      "Я":ru_symbol_Ya  # type: ignore
+ru = {"A":ru_symbol_A,  
+      "Б":ru_symbol_Be, 
+      "В":ru_symbol_Ve, 
+      "Г":ru_symbol_G,  
+      "Д":ru_symbol_D,           
+      "Е":ru_symbol_E,  
+      "Ё":ru_symbol_Yo, 
+      "Ж":ru_symbol_Ze, 
+      "З":ru_symbol_Ze, 
+      "И":ru_symbol_And,
+      "Й":ru_symbol_Yo, 
+      "К":ru_symbol_K,  
+      "Л":ru_symbol_L,  
+      "М":ru_symbol_M,  
+      "Н":ru_symbol_H,  
+      "О":ru_symbol_O,  
+      "П":ru_symbol_P,  
+      "Р":ru_symbol_R,  
+      "С":ru_symbol_C,  
+      "Т":ru_symbol_T,  
+      "У":ru_symbol_U,  
+      "Ф":ru_symbol_F,  
+      "Х":ru_symbol_X,  
+      "Ц":ru_symbol_Ce, 
+      "Ч":ru_symbol_Che,
+      "Ш":ru_symbol_Sha, 
+      "Щ":ru_symbol_Shca, 
+      "Ъ":ru_symbol_Tverd, 
+      "Ы":ru_symbol_Yi, 
+      "Ь":ru_symbol_Magki, 
+      "Э":ru_symbol_Eee,
+      "Ю":ru_symbol_U,  
+      "Я":ru_symbol_Ya 
 }
 
 en = {"A": us_symbol_A,
-      "B": "",
-      "C": "",
-      "D": "",
+      "B": us_symbol_B,
+      "C": us_symbol_C,
+      "D": us_symbol_D,
       "E": us_symbol_E,
       "F": us_symbol_F,
-      "G": "",
+      "G": us_symbol_G,
       "H": us_symbol_H,
       "I": us_symbol_I,
-      "J": "",
+      "J": us_symbol_J,
       "K": us_symbol_K,
       "L": us_symbol_L,
       "M": us_symbol_M,
       "N": us_symbol_N,
-      "O": "",
-      "P": "",
-      "Q": "",
-      "R": "",
-      "S": "",
+      "O": us_symbol_O,
+      "P": us_symbol_P,
+      "Q": us_symbol_Q,
+      "R": us_symbol_R,
+      "S": us_symbol_S,
       "T": us_symbol_T,
-      "U": "",
+      "U": us_symbol_U,
       "V": us_symbol_V,
       "W": us_symbol_W,
       "X": us_symbol_X,
